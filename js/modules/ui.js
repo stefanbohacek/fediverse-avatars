@@ -275,21 +275,23 @@ export default () => {
   }
 
   uploadAvatarBtn.addEventListener("click", () => {
-    const instance = getLocalStorage("auth_instance");
-    const token = getLocalStorage("auth_token");
-    uploadAvatarBtn.disabled = true;
-    uploadAvatarBtn.textContent = "Uploading...";
-    fetch(downloadBtn.href)
-      .then((r) => r.blob())
-      .then((blob) => uploadAvatar(instance, token, blob))
-      .then(() => {
-        uploadAvatarBtn.textContent = "Uploaded!";
-      })
-      .catch((err) => {
-        uploadAvatarBtn.textContent = "Upload failed";
-        uploadAvatarBtn.disabled = false;
-        console.error("Upload avatar error", { err });
-      });
+    if (confirm("Ready to update your profile image?")) {
+      const instance = getLocalStorage("auth_instance");
+      const token = getLocalStorage("auth_token");
+      uploadAvatarBtn.disabled = true;
+      uploadAvatarBtn.textContent = "Uploading...";
+      fetch(downloadBtn.href)
+        .then((r) => r.blob())
+        .then((blob) => uploadAvatar(instance, token, blob))
+        .then(() => {
+          uploadAvatarBtn.textContent = "Uploaded!";
+        })
+        .catch((err) => {
+          uploadAvatarBtn.textContent = "Upload failed";
+          uploadAvatarBtn.disabled = false;
+          console.error("Upload avatar error", { err });
+        });
+    }
   });
 
   const urlParams = new URLSearchParams(window.location.search);

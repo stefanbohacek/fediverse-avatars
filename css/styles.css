@@ -1,0 +1,171 @@
+/* Adapted from Happy Hues: https://www.happyhues.co/palettes/12 */
+
+:root {
+  --hh-bg: #d4d8f0;
+  --hh-surface: #b8c1ec;
+  --hh-card-bg: #fffffe;
+  --hh-headline: #232946;
+  --hh-body: #232946;
+  --hh-accent: #ef4565;
+  --hh-accent-fg: #232946;
+  --hh-stroke: #121629;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hh-bg: #232946;
+    --hh-surface: #b8c1ec;
+    --hh-card-bg: color-mix(in srgb, var(--hh-surface) 8%, var(--hh-bg));
+    --hh-headline: #fffffe;
+    --hh-body: #b8c1ec;
+    --hh-accent: #eebbc3;
+    --hh-accent-fg: #232946;
+    --hh-stroke: #121629;
+  }
+}
+
+html,
+body {
+  min-height: 100vh;
+  background-color: var(--hh-bg);
+  color: var(--hh-body);
+  font-family:
+    Avenir, Montserrat, Corbel, "URW Gothic", source-sans-pro, sans-serif;
+  font-weight: normal;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.fs-1,
+strong {
+  color: var(--hh-headline);
+}
+
+a,
+a:visited {
+  color: var(--hh-accent);
+  text-decoration-color: currentColor;
+}
+
+a.btn-primary:visited {
+  color: #fffffe;
+}
+
+@media (prefers-color-scheme: dark) {
+  a.btn-primary:visited {
+    color: var(--hh-accent-fg);
+  }
+}
+
+a:hover,
+a:focus {
+  color: var(--hh-headline);
+  text-decoration-color: var(--hh-headline);
+}
+
+#main {
+  color: var(--hh-body);
+}
+
+.card {
+  --bs-card-bg: var(--hh-card-bg);
+  --bs-card-border-color: color-mix(
+    in srgb,
+    var(--hh-surface) 50%,
+    transparent
+  );
+  --bs-card-color: var(--hh-body);
+}
+
+#main .container.p-1 {
+  margin-top: 2rem !important;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--hh-accent);
+  --bs-btn-border-color: var(--hh-accent);
+  color: var(--hh-accent);
+  --bs-btn-hover-color: #fffffe;
+  --bs-btn-hover-bg: var(--hh-accent);
+  --bs-btn-hover-border-color: var(--hh-accent);
+  --bs-btn-active-color: #fffffe;
+  --bs-btn-active-bg: var(--hh-accent);
+  --bs-btn-active-border-color: var(--hh-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-outline-primary {
+    --bs-btn-hover-color: var(--hh-accent-fg);
+    --bs-btn-active-color: var(--hh-accent-fg);
+  }
+}
+
+.btn-primary {
+  background-color: var(--hh-accent);
+  border-color: var(--hh-accent);
+  color: #fffffe;
+  --bs-btn-disabled-bg: var(--hh-accent);
+  --bs-btn-disabled-border-color: var(--hh-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-primary {
+    color: var(--hh-accent-fg);
+  }
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--hh-headline);
+  border-color: var(--hh-headline);
+  color: var(--hh-card-bg);
+}
+
+#preview-area .avatar,
+.checkerboard {
+  max-width: 200px;
+}
+
+.badge-new {
+  display: inline-block;
+}
+
+#select-background-options img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.checkerboard {
+  min-height: 200px;
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #d0d0d0 25%, transparent 25%),
+    linear-gradient(-45deg, #d0d0d0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #d0d0d0 75%),
+    linear-gradient(-45deg, transparent 75%, #d0d0d0 75%);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0px;
+}

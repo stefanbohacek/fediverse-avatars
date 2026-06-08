@@ -58,7 +58,7 @@ export default () => {
     );
   };
 
-  imageInput.addEventListener("change", (event) => {
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       currentFile = file;
@@ -78,9 +78,9 @@ export default () => {
         saveToLocalStorage("avatar_original", webpBlob),
       );
     }
-  });
+  };
 
-  removeImageBtn.addEventListener("click", () => {
+  const handleRemoveImage = () => {
     currentFile = null;
     foregroundBlob = null;
     if (foregroundUrl) {
@@ -104,9 +104,9 @@ export default () => {
     }
     imageSource = null;
     clearLocalStorage();
-  });
+  };
 
-  removeBgBtn.addEventListener("click", async () => {
+  const handleRemoveBg = async () => {
     if (currentFile) {
       removeBgBtn.disabled = true;
       progressArea.classList.remove("d-none");
@@ -162,9 +162,9 @@ export default () => {
         removeImageBtn.classList.remove("d-none");
       }
     }
-  });
+  };
 
-  selectBackgroundOptions.addEventListener("change", (event) => {
+  const handleBgChange = (event) => {
     if (foregroundUrl) {
       URL.revokeObjectURL(foregroundUrl);
       foregroundUrl = null;
@@ -177,13 +177,9 @@ export default () => {
       uploadAvatarBtn.classList.remove("d-none");
     }
     applyBackground(event.target.value);
-  });
+  };
 
-  bgScaleSlider.addEventListener("input", () => {
-    bgScaleValue.textContent = bgScaleSlider.value;
-  });
-
-  bgScaleSlider.addEventListener("change", () => {
+  const handleScaleChange = () => {
     setLocalStorage("avatar_bg_scale", bgScaleSlider.value);
     const checkedRadio = selectBackgroundOptions.querySelector("input:checked");
     if (checkedRadio && foregroundBlob) {
@@ -193,72 +189,74 @@ export default () => {
       }
       applyBackground(checkedRadio.value);
     }
-  });
+  };
 
-  const savedScale = getLocalStorage("avatar_bg_scale");
-  if (savedScale) {
-    bgScaleSlider.value = savedScale;
-    bgScaleValue.textContent = savedScale;
-  }
-
-  const savedImageSource = getLocalStorage("image_source");
-  if (savedImageSource) {
-    imageSource = savedImageSource;
-    if (imageSource === "api") {
-      removeImageBtn.textContent = "Remove image and log out";
+  const restoreState = () => {
+    const savedScale = getLocalStorage("avatar_bg_scale");
+    if (savedScale) {
+      bgScaleSlider.value = savedScale;
+      bgScaleValue.textContent = savedScale;
     }
-  }
 
-  const savedOriginal = getLocalStorage("avatar_original");
-  const savedNoBg = getLocalStorage("avatar_no_bg");
+    const savedImageSource = getLocalStorage("image_source");
+    if (savedImageSource) {
+      imageSource = savedImageSource;
+      if (imageSource === "api") {
+        removeImageBtn.textContent = "Remove image and log out";
+      }
+    }
 
-  if (savedOriginal) {
-    originalImage.src = savedOriginal;
-    examplesImage.classList.add("d-none");
-    previewArea.classList.remove("d-none");
-    previewSkeleton.classList.remove("d-none");
-    previewImages.classList.add("d-none");
-    if (!savedNoBg) {
-      removeBgBtn.classList.remove("d-none");
-      fetch(savedOriginal)
+    const savedOriginal = getLocalStorage("avatar_original");
+    const savedNoBg = getLocalStorage("avatar_no_bg");
+
+    if (savedOriginal) {
+      originalImage.src = savedOriginal;
+      examplesImage.classList.add("d-none");
+      previewArea.classList.remove("d-none");
+      previewSkeleton.classList.remove("d-none");
+      previewImages.classList.add("d-none");
+      if (!savedNoBg) {
+        removeBgBtn.classList.remove("d-none");
+        fetch(savedOriginal)
+          .then((r) => r.blob())
+          .then((blob) => {
+            currentFile = blob;
+            previewSkeleton.classList.add("d-none");
+            previewImages.classList.remove("d-none");
+          });
+      }
+    }
+    if (savedNoBg) {
+      examplesImage.classList.add("d-none");
+      previewArea.classList.remove("d-none");
+      resultImage.src = savedNoBg;
+      fetch(savedNoBg)
         .then((r) => r.blob())
         .then((blob) => {
-          currentFile = blob;
+          foregroundBlob = blob;
           previewSkeleton.classList.add("d-none");
           previewImages.classList.remove("d-none");
+          removeBgBtn.classList.add("d-none");
+          selectBackground.classList.remove("d-none");
+          const savedBackground = getLocalStorage("avatar_background");
+          if (savedBackground) {
+            const radio = selectBackgroundOptions.querySelector(
+              `input[value="${savedBackground}"]`,
+            );
+            if (radio) {
+              radio.checked = true;
+            }
+            bgScaleContainer.classList.remove("d-none");
+            if (imageSource === "api") {
+              uploadAvatarBtn.classList.remove("d-none");
+            }
+            applyBackground(savedBackground);
+          }
         });
     }
-  }
-  if (savedNoBg) {
-    examplesImage.classList.add("d-none");
-    previewArea.classList.remove("d-none");
-    resultImage.src = savedNoBg;
-    fetch(savedNoBg)
-      .then((r) => r.blob())
-      .then((blob) => {
-        foregroundBlob = blob;
-        previewSkeleton.classList.add("d-none");
-        previewImages.classList.remove("d-none");
-        removeBgBtn.classList.add("d-none");
-        selectBackground.classList.remove("d-none");
-        const savedBackground = getLocalStorage("avatar_background");
-        if (savedBackground) {
-          const radio = selectBackgroundOptions.querySelector(
-            `input[value="${savedBackground}"]`,
-          );
-          if (radio) {
-            radio.checked = true;
-          }
-          bgScaleContainer.classList.remove("d-none");
-          if (imageSource === "api") {
-            uploadAvatarBtn.classList.remove("d-none");
-          }
-          applyBackground(savedBackground);
-        }
-      });
-  }
+  };
 
-  uploadAvatarBtn.addEventListener("click", () => {
+  const handleUploadAvatar = () => {
     if (confirm("Ready to update your profile image?")) {
       const instance = getLocalStorage("auth_instance");
       const token = getLocalStorage("auth_token");
@@ -276,46 +274,61 @@ export default () => {
           console.error("Upload avatar error", { err });
         });
     }
-  });
+  };
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const authToken = urlParams.get("token");
-  const authInstance = urlParams.get("instance");
-  const authError = urlParams.get("error");
+  const handleAuthCallback = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authToken = urlParams.get("token");
+    const authInstance = urlParams.get("instance");
+    const authError = urlParams.get("error");
 
-  if (authError) {
-    window.history.replaceState({}, document.title, window.location.pathname);
-    if (authError === "platform_not_supported") {
-      alert("Sorry, this platform is not yet supported.");
-    } else {
-      alert(
-        "Sign-in failed. Please try again or reach out via stefanbohacek.com/contact.",
-      );
-    }
-  } else if (authToken && authInstance) {
-    window.history.replaceState({}, document.title, window.location.pathname);
-    fetchAvatar(authInstance, authToken)
-      .then((blob) => {
-        currentFile = blob;
-        originalImage.src = URL.createObjectURL(blob);
-        examplesImage.classList.add("d-none");
-        previewArea.classList.remove("d-none");
-        previewSkeleton.classList.add("d-none");
-        previewImages.classList.remove("d-none");
-        imageSource = "api";
-        removeImageBtn.textContent = "Remove image and log out";
-        setLocalStorage("image_source", "api");
-        setLocalStorage("auth_token", authToken);
-        setLocalStorage("auth_instance", authInstance);
-        blobToWebP(blob).then((webpBlob) =>
-          saveToLocalStorage("avatar_original", webpBlob),
+    if (authError) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      if (authError === "platform_not_supported") {
+        alert("Sorry, this platform is not yet supported.");
+      } else {
+        alert(
+          "Sign-in failed. Please try again or reach out via stefanbohacek.com/contact.",
         );
-        removeBgBtn.classList.add("d-none");
-        removeImageBtn.classList.add("d-none");
-        removeBgBtn.click();
-      })
-      .catch((err) => {
-        console.error("auth callback error", { err });
-      });
-  }
+      }
+    } else if (authToken && authInstance) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      fetchAvatar(authInstance, authToken)
+        .then((blob) => {
+          currentFile = blob;
+          originalImage.src = URL.createObjectURL(blob);
+          examplesImage.classList.add("d-none");
+          previewArea.classList.remove("d-none");
+          previewSkeleton.classList.add("d-none");
+          previewImages.classList.remove("d-none");
+          imageSource = "api";
+          removeImageBtn.textContent = "Remove image and log out";
+          setLocalStorage("image_source", "api");
+          setLocalStorage("auth_token", authToken);
+          setLocalStorage("auth_instance", authInstance);
+          blobToWebP(blob).then((webpBlob) =>
+            saveToLocalStorage("avatar_original", webpBlob),
+          );
+          removeBgBtn.classList.add("d-none");
+          removeImageBtn.classList.add("d-none");
+          handleRemoveBg();
+        })
+        .catch((err) => {
+          console.error("auth callback error", { err });
+        });
+    }
+  };
+
+  imageInput.addEventListener("change", handleFileChange);
+  removeImageBtn.addEventListener("click", handleRemoveImage);
+  removeBgBtn.addEventListener("click", handleRemoveBg);
+  selectBackgroundOptions.addEventListener("change", handleBgChange);
+  bgScaleSlider.addEventListener("input", () => {
+    bgScaleValue.textContent = bgScaleSlider.value;
+  });
+  bgScaleSlider.addEventListener("change", handleScaleChange);
+  uploadAvatarBtn.addEventListener("click", handleUploadAvatar);
+
+  restoreState();
+  handleAuthCallback();
 };

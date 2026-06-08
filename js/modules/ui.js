@@ -155,6 +155,7 @@ export default () => {
         console.error(err);
       } finally {
         removeBgBtn.disabled = false;
+        removeImageBtn.classList.remove("d-none");
       }
     }
   });
@@ -327,6 +328,7 @@ export default () => {
           saveToLocalStorage("avatar_original", webpBlob),
         );
         removeBgBtn.classList.add("d-none");
+        removeImageBtn.classList.add("d-none");
         removeBgBtn.click();
       })
       .catch((err) => {

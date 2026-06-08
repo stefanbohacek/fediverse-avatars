@@ -47,6 +47,17 @@ export default () => {
   let foregroundUrl = null;
   let imageSource = null;
 
+  const applyBackground = (backgroundKey) => {
+    applySelectedBackground(
+      foregroundBlob,
+      backgroundKey,
+      resultImage,
+      downloadBtn,
+      downloadArea,
+      parseFloat(bgScaleSlider.value),
+    );
+  };
+
   imageInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -141,14 +152,7 @@ export default () => {
         if (checkedRadio) {
           URL.revokeObjectURL(foregroundUrl);
           foregroundUrl = null;
-          applySelectedBackground(
-            foregroundBlob,
-            checkedRadio.value,
-            resultImage,
-            downloadBtn,
-            downloadArea,
-            parseFloat(bgScaleSlider.value),
-          );
+          applyBackground(checkedRadio.value);
         }
       } catch (err) {
         progressText.textContent = "Error occurred: " + err.message;
@@ -172,14 +176,7 @@ export default () => {
       uploadAvatarBtn.disabled = false;
       uploadAvatarBtn.classList.remove("d-none");
     }
-    applySelectedBackground(
-      foregroundBlob,
-      event.target.value,
-      resultImage,
-      downloadBtn,
-      downloadArea,
-      parseFloat(bgScaleSlider.value),
-    );
+    applyBackground(event.target.value);
   });
 
   bgScaleSlider.addEventListener("input", () => {
@@ -194,14 +191,7 @@ export default () => {
         uploadAvatarBtn.textContent = "Upload avatar";
         uploadAvatarBtn.disabled = false;
       }
-      applySelectedBackground(
-        foregroundBlob,
-        checkedRadio.value,
-        resultImage,
-        downloadBtn,
-        downloadArea,
-        parseFloat(bgScaleSlider.value),
-      );
+      applyBackground(checkedRadio.value);
     }
   });
 
@@ -263,14 +253,7 @@ export default () => {
           if (imageSource === "api") {
             uploadAvatarBtn.classList.remove("d-none");
           }
-          applySelectedBackground(
-            foregroundBlob,
-            savedBackground,
-            resultImage,
-            downloadBtn,
-            downloadArea,
-            parseFloat(bgScaleSlider.value),
-          );
+          applyBackground(savedBackground);
         }
       });
   }

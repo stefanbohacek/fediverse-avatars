@@ -148,6 +148,10 @@ a:focus {
   display: inline-block;
 }
 
+.form-text {
+  color: var(--hh-body);
+}
+
 #select-background-options img {
   width: 200px;
   height: 200px;

@@ -158,10 +158,16 @@ a:focus {
   }
 }
 
+#select-background-options .btn,
+#select-pride-flag-options .btn {
+  height: 100%;
+}
+
 #select-background-options img,
 #select-pride-flag-options img {
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 1;
   object-fit: cover;
 }
 

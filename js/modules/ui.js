@@ -8,6 +8,14 @@ import {
 } from "./storage.js";
 import { toWebP as blobToWebP } from "./blobConvert.js";
 import { removeBackground } from "../../libs/imgly/background-removal/dist/index.mjs";
+import {
+  getOverlayKey,
+  resetOverlay,
+  showOverlay,
+  hideOverlay,
+  restoreOverlay,
+  initOverlay,
+} from "./overlay.js";
 
 const progressMessages = {
   "compute:decode": "Decoding image",
@@ -51,6 +59,7 @@ export default () => {
     applySelectedBackground(
       foregroundBlob,
       backgroundKey,
+      getOverlayKey(),
       resultImage,
       downloadBtn,
       downloadArea,
@@ -69,6 +78,7 @@ export default () => {
       downloadArea.classList.add("d-none");
       progressArea.classList.add("d-none");
       selectBackground.classList.add("d-none");
+      hideOverlay();
       examplesImage.classList.add("d-none");
       previewArea.classList.remove("d-none");
       imageSource = "file";
@@ -83,25 +93,35 @@ export default () => {
   const handleRemoveImage = () => {
     currentFile = null;
     foregroundBlob = null;
+
     if (foregroundUrl) {
       URL.revokeObjectURL(foregroundUrl);
       foregroundUrl = null;
     }
+
     imageInput.value = "";
     originalImage.src = "";
     resultImage.src = "";
     selectBackgroundOptions.querySelectorAll("input").forEach((radio) => {
       radio.checked = false;
     });
+
+    resetOverlay();
+
     removeImageBtn.textContent = "Remove image";
     bgScaleContainer.classList.add("d-none");
     previewArea.classList.add("d-none");
     selectBackground.classList.add("d-none");
+
+    hideOverlay();
+
     examplesImage.classList.remove("d-none");
     downloadArea.classList.add("d-none");
+
     if (imageSource === "api") {
       document.getElementById("fediverse-server").value = "";
     }
+
     imageSource = null;
     clearLocalStorage();
   };
@@ -126,7 +146,7 @@ export default () => {
                 "progress-bar-animated",
               );
               progressBar.style.width = "100%";
-              progressText.textContent = (progressMessages[key] || key) + "";
+              progressText.textContent = (progressMessages[key] || key) + "...";
             } else if (total > 0) {
               const percent = Math.round((current / total) * 100);
               progressBar.classList.remove(
@@ -139,16 +159,22 @@ export default () => {
             }
           },
         });
+
         foregroundUrl = URL.createObjectURL(foregroundBlob);
         resultImage.src = foregroundUrl;
         removeBgBtn.classList.add("d-none");
         progressArea.classList.add("d-none");
         selectBackground.classList.remove("d-none");
+
+        showOverlay();
+
         blobToWebP(foregroundBlob).then((webpBlob) =>
           saveToLocalStorage("avatar_no_bg", webpBlob),
         );
+
         const checkedRadio =
           selectBackgroundOptions.querySelector("input:checked");
+
         if (checkedRadio) {
           URL.revokeObjectURL(foregroundUrl);
           foregroundUrl = null;
@@ -169,19 +195,24 @@ export default () => {
       URL.revokeObjectURL(foregroundUrl);
       foregroundUrl = null;
     }
+
     bgScaleContainer.classList.remove("d-none");
+
     setLocalStorage("avatar_background", event.target.value);
+
     if (imageSource === "api") {
       uploadAvatarBtn.textContent = "Upload avatar";
       uploadAvatarBtn.disabled = false;
       uploadAvatarBtn.classList.remove("d-none");
     }
+
     applyBackground(event.target.value);
   };
 
   const handleScaleChange = () => {
     setLocalStorage("avatar_bg_scale", bgScaleSlider.value);
     const checkedRadio = selectBackgroundOptions.querySelector("input:checked");
+
     if (checkedRadio && foregroundBlob) {
       if (imageSource === "api") {
         uploadAvatarBtn.textContent = "Upload avatar";
@@ -193,12 +224,14 @@ export default () => {
 
   const restoreState = () => {
     const savedScale = getLocalStorage("avatar_bg_scale");
+
     if (savedScale) {
       bgScaleSlider.value = savedScale;
       bgScaleValue.textContent = savedScale;
     }
 
     const savedImageSource = getLocalStorage("image_source");
+
     if (savedImageSource) {
       imageSource = savedImageSource;
       if (imageSource === "api") {
@@ -215,6 +248,7 @@ export default () => {
       previewArea.classList.remove("d-none");
       previewSkeleton.classList.remove("d-none");
       previewImages.classList.add("d-none");
+
       if (!savedNoBg) {
         removeBgBtn.classList.remove("d-none");
         fetch(savedOriginal)
@@ -230,6 +264,9 @@ export default () => {
       examplesImage.classList.add("d-none");
       previewArea.classList.remove("d-none");
       resultImage.src = savedNoBg;
+
+      restoreOverlay();
+
       fetch(savedNoBg)
         .then((r) => r.blob())
         .then((blob) => {
@@ -238,18 +275,26 @@ export default () => {
           previewImages.classList.remove("d-none");
           removeBgBtn.classList.add("d-none");
           selectBackground.classList.remove("d-none");
+
+          showOverlay();
+
           const savedBackground = getLocalStorage("avatar_background");
+
           if (savedBackground) {
             const radio = selectBackgroundOptions.querySelector(
               `input[value="${savedBackground}"]`,
             );
+
             if (radio) {
               radio.checked = true;
             }
+
             bgScaleContainer.classList.remove("d-none");
+
             if (imageSource === "api") {
               uploadAvatarBtn.classList.remove("d-none");
             }
+
             applyBackground(savedBackground);
           }
         });
@@ -260,8 +305,10 @@ export default () => {
     if (confirm("Ready to update your profile image?")) {
       const instance = getLocalStorage("auth_instance");
       const token = getLocalStorage("auth_token");
+
       uploadAvatarBtn.disabled = true;
       uploadAvatarBtn.textContent = "Uploading...";
+
       fetch(downloadBtn.href)
         .then((r) => r.blob())
         .then((blob) => uploadAvatar(instance, token, blob))
@@ -284,6 +331,7 @@ export default () => {
 
     if (authError) {
       window.history.replaceState({}, document.title, window.location.pathname);
+
       if (authError === "platform_not_supported") {
         alert("Sorry, this platform is not yet supported.");
       } else {
@@ -293,6 +341,7 @@ export default () => {
       }
     } else if (authToken && authInstance) {
       window.history.replaceState({}, document.title, window.location.pathname);
+
       fetchAvatar(authInstance, authToken)
         .then((blob) => {
           currentFile = blob;
@@ -303,14 +352,17 @@ export default () => {
           previewImages.classList.remove("d-none");
           imageSource = "api";
           removeImageBtn.textContent = "Remove image and log out";
+
           setLocalStorage("image_source", "api");
           setLocalStorage("auth_token", authToken);
           setLocalStorage("auth_instance", authInstance);
           blobToWebP(blob).then((webpBlob) =>
             saveToLocalStorage("avatar_original", webpBlob),
           );
+
           removeBgBtn.classList.add("d-none");
           removeImageBtn.classList.add("d-none");
+
           handleRemoveBg();
         })
         .catch((err) => {
@@ -323,6 +375,19 @@ export default () => {
   removeImageBtn.addEventListener("click", handleRemoveImage);
   removeBgBtn.addEventListener("click", handleRemoveBg);
   selectBackgroundOptions.addEventListener("change", handleBgChange);
+
+  initOverlay(() => {
+    const checkedBgRadio =
+      selectBackgroundOptions.querySelector("input:checked");
+
+    if (checkedBgRadio && foregroundBlob) {
+      if (imageSource === "api") {
+        uploadAvatarBtn.textContent = "Upload avatar";
+        uploadAvatarBtn.disabled = false;
+      }
+      applyBackground(checkedBgRadio.value);
+    }
+  });
   bgScaleSlider.addEventListener("input", () => {
     bgScaleValue.textContent = bgScaleSlider.value;
   });

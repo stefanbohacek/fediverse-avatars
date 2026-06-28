@@ -152,7 +152,14 @@ a:focus {
   color: var(--hh-body);
 }
 
-#select-background-options img {
+@media (prefers-color-scheme: dark) {
+  .text-muted {
+    color: var(--hh-body) !important;
+  }
+}
+
+#select-background-options img,
+#select-pride-flag-options img {
   width: 200px;
   height: 200px;
   object-fit: cover;

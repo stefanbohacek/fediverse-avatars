@@ -203,10 +203,124 @@
             </div>
           </div>
 
+          <div id="select-overlay"
+            class="d-none mt-3">
+            <p class="lead fw-bold">
+              Step 4 <span class="fw-normal text-muted">(Optional)</span>: Pick an overlay
+            </p>
+            <div class="mb-3">
+              <input type="radio"
+                class="btn-check"
+                name="overlay"
+                id="pride-flag-none"
+                value=""
+                autocomplete="off"
+                checked>
+              <label class="btn btn-outline-primary"
+                for="pride-flag-none">No overlay</label>
+            </div>
+            <p class="fw-bold mb-2">Pride</p>
+            <div class="row g-3"
+              id="select-pride-flag-options">
+              <div class="col-6 col-md-4">
+                <input type="radio"
+                  class="btn-check"
+                  name="overlay"
+                  id="pride-flag-gilbert-baker"
+                  value="pride--gilbert-baker"
+                  autocomplete="off">
+                <label class="btn btn-outline-primary w-100 p-2"
+                  for="pride-flag-gilbert-baker">
+                  <img src="images/overlays/pride-flags/fediverse-international-gilbert-baker-pride-flag.png"
+                    class="rounded mb-1"
+                    alt="">
+                  <div class="small">Gilbert Baker Pride Flag</div>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio"
+                  class="btn-check"
+                  name="overlay"
+                  id="pride-flag-traditional-gay"
+                  value="pride--traditional-gay"
+                  autocomplete="off">
+                <label class="btn btn-outline-primary w-100 p-2"
+                  for="pride-flag-traditional-gay">
+                  <img src="images/overlays/pride-flags/fediverse-international-traditional-gay-pride-flag.png"
+                    class="rounded mb-1"
+                    alt="">
+                  <div class="small">Traditional Pride Flag</div>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio"
+                  class="btn-check"
+                  name="overlay"
+                  id="pride-flag-philadelphia"
+                  value="pride--philadelphia"
+                  autocomplete="off">
+                <label class="btn btn-outline-primary w-100 p-2"
+                  for="pride-flag-philadelphia">
+                  <img src="images/overlays/pride-flags/fediverse-international-traditional-philly-pride-flag.png"
+                    class="rounded mb-1"
+                    alt="">
+                  <div class="small">Philadelphia Pride Flag</div>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio"
+                  class="btn-check"
+                  name="overlay"
+                  id="pride-flag-progress-variant"
+                  value="pride--progress-variant"
+                  autocomplete="off">
+                <label class="btn btn-outline-primary w-100 p-2"
+                  for="pride-flag-progress-variant">
+                  <img src="images/overlays/pride-flags/fediverse-international-progress-variant-pride-flag.png"
+                    class="rounded mb-1"
+                    alt="">
+                  <div class="small">Progress Pride Flag</div>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio"
+                  class="btn-check"
+                  name="overlay"
+                  id="pride-flag-intersex-inclusive"
+                  value="pride--intersex-inclusive"
+                  autocomplete="off">
+                <label class="btn btn-outline-primary w-100 p-2"
+                  for="pride-flag-intersex-inclusive">
+                  <img src="images/overlays/pride-flags/fediverse-international-intersex-inclusive-pride-flag.png"
+                    class="rounded mb-1"
+                    alt="">
+                  <div class="small">Intersex-Inclusive Progress Pride Flag</div>
+                </label>
+              </div>
+              <div class="col-6 col-md-4">
+                <input type="radio"
+                  class="btn-check"
+                  name="overlay"
+                  id="pride-flag-queer"
+                  value="pride--queer"
+                  autocomplete="off">
+                <label class="btn btn-outline-primary w-100 p-2"
+                  for="pride-flag-queer">
+                  <img src="images/overlays/pride-flags/fediverse-international-queer-pride-flag.png"
+                    class="rounded mb-1"
+                    alt="">
+                  <div class="small">Queer Pride Flag</div>
+                </label>
+              </div>
+            </div>
+            <p class="text-muted small mt-2">Source: <a
+                href="https://www.hrc.org/resources/lgbtq-pride-flags">hrc.org</a></p>
+          </div>
+
           <div id="download-area"
             class="d-none mt-3">
             <p class="lead fw-bold">
-              Step 4: Download your new profile image
+              Step 5: Download your new profile image
             </p>
             <a id="download-btn"
               class="btn btn-primary"
@@ -224,7 +338,7 @@
       <p class="mb-0">
         Made by <a href="https://stefanbohacek.online/@stefan"
           rel="me">@stefan</a> with <a href="https://github.com/imgly/background-removal-js">img.ly</a>.
-          <a href="https://github.com/stefanbohacek/fediverse-avatars">View source.</a>
+        <a href="https://github.com/stefanbohacek/fediverse-avatars">View source.</a>
         <!--
         <a href="https://stefanbohacek.com/project/explore-your-fediverse-connections/">Learn more.</a>
         <a href="https://stefanbohacek.com/project/explore-your-fediverse-connections/#privacy-policy">Privacy

@@ -4,6 +4,7 @@ const KEYS = [
   "avatar_original",
   "avatar_no_bg",
   "avatar_background",
+  "avatar_overlay",
   "avatar_bg_scale",
   "image_source",
   "fediverse_server",

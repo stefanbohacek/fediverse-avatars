@@ -46,7 +46,7 @@ const getProcessedFgCanvas = async (foregroundBlob, skipThreshold = false) => {
     const imageData = fgCtx.getImageData(0, 0, fgCanvas.width, fgCanvas.height);
     const pixels = imageData.data;
     for (let i = 3; i < pixels.length; i += 4) {
-      pixels[i] = pixels[i] > 10 ? 255 : 0;
+      pixels[i] = pixels[i] > 5 ? 255 : 0;
     }
     fgCtx.putImageData(imageData, 0, 0);
   }

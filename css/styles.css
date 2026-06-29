@@ -84,6 +84,11 @@ a:focus {
   color: var(--hh-body);
 }
 
+#intro{
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .card {
   --bs-card-bg: var(--hh-card-bg);
   --bs-card-border-color: color-mix(

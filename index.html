@@ -43,291 +43,378 @@
     <![endif]-->
     <section id="intro"
       class="flex-shrink-0">
-      <div class="d-flex align-items-center min-vh-100 position-relative">
-        <div class="mx-auto my-5 p-2">
-          <h1 class="text-center mb-5">
-            Fediversify your profile image
-          </h1>
-          <img id="examples-image"
-            width="420"
-            height="200"
-            src="images/examples/examples.png"
-            class="img-fluid d-block mx-auto mb-4"
-            alt="Three example profile photos with the translations of the word 'fediverse' repeating in the background in dark and light variations">
-          <p class="lead fw-bold">
-            Step 1: Sign in or pick an image
-          </p>
-          <div class="row">
-            <div class="col-12 col-md-6">
-              <form id="sign-in-form">
-                <label for="fediverse-server"
-                  class="d-block form-label text-start">
-                  Sign in with your fediverse account
-                </label>
-                <div class="input-group mb-3">
-                  <span class="input-group-text">https://</span>
-                  <input required=""
-                    id="fediverse-server"
-                    type="text"
-                    class="form-control"
-                    placeholder="mastodon.social">
-                  <button class="btn btn-outline-secondary"
-                    type="submit"
-                    id="sign-in">Sign in</button>
+      <div class="my-5 p-2">
+        <h1 class="text-center mb-5">
+          Fediversify your profile image
+        </h1>
+
+        <div id="examples-image"
+          class="d-flex justify-content-center my-5">
+          <div class="examples-collage d-flex align-items-center"
+            role="img"
+            aria-label="Example profile images with fediverse-themed backgrounds">
+            <img src="images/examples/cat-small.png"
+              class="examples-img rounded"
+              width="120"
+              height="120"
+              alt=""
+              style="background-color: #e8ebef;">
+            <img src="images/examples/dancer-small.png"
+              class="examples-img rounded"
+              width="120"
+              height="120"
+              alt=""
+              style="background-color: #da4453;">
+            <img src="images/examples/elderly-small.png"
+              class="examples-img rounded"
+              width="120"
+              height="120"
+              alt=""
+              style="background-color: #ac92ec;">
+            <img src="images/examples/example-couple-pride-small.png"
+              class="examples-img rounded"
+              width="120"
+              height="120"
+              alt=""
+              style="background: linear-gradient(to bottom, #e60000, #ffb456, #feee01, #018021, #004afb, #780088);">
+            <img src="images/examples/guy-small.png"
+              class="examples-img rounded"
+              width="120"
+              height="120"
+              alt=""
+              style="background-color: #4a89dc;">
+            <img src="images/examples/hmm-small.png"
+              class="examples-img rounded"
+              width="120"
+              height="120"
+              alt=""
+              style="background-color: #faba42;">
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div id="col-preview"
+            class="col-md-4 d-none pt-2">
+            <div class="sticky-top"
+              style="top: 1rem;">
+              <div id="preview-skeleton"
+                class="d-none placeholder-glow mb-3 row g-2">
+                <div class="col-6 col-md-12">
+                  <span class="placeholder rounded d-block"
+                    style="aspect-ratio:1;"></span>
                 </div>
-                <div class="form-text mb-3">Please use your server name, eg. <em>mastodon.social</em>, without <em>https</em> or your username. Currently only Mastodon is supported, more to come!</div>
-              </form>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="mb-3">
-                <label for="image-input"
-                  class="form-label">Or upload your profile image manually</label>
-                <input type="file"
-                  class="form-control"
-                  id="image-input"
-                  accept="image/*">
+                <div class="col-6 col-md-12">
+                  <span class="placeholder rounded d-block"
+                    style="aspect-ratio:1;"></span>
+                </div>
+              </div>
+              <div id="preview-images"
+                class="row g-2 mb-3">
+                <div class="col-6 col-md-12">
+                  <img id="original-image"
+                    class="avatar img-fluid rounded"
+                    alt="">
+                </div>
+                <div id="result-image-wrapper"
+                  class="col-6 col-md-12 d-none">
+                  <div class="checkerboard rounded">
+                    <img id="result-image"
+                      class="avatar img-fluid"
+                      alt="">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div id="preview-area"
-            class="d-none mt-3">
+          <div id="col-controls"
+            class="col-12">
             <p class="lead fw-bold">
-              Step 2: Remove the background from your profile image
+              Step 1: Sign in or pick an image
             </p>
-            <div id="preview-skeleton"
-              class="d-none placeholder-glow row g-3 mb-3">
-              <div class="col-md-6">
-                <span class="placeholder rounded d-block"
-                  style="width:200px;height:200px;"></span>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <form id="sign-in-form">
+                  <label for="fediverse-server"
+                    class="d-block form-label text-start">
+                    Sign in with your fediverse account
+                  </label>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">https://</span>
+                    <input required=""
+                      id="fediverse-server"
+                      type="text"
+                      class="form-control"
+                      placeholder="mastodon.social">
+                    <button class="btn btn-outline-secondary"
+                      type="submit"
+                      id="sign-in">Sign in</button>
+                  </div>
+                  <div class="form-text mb-3">Just your server name, eg. <em>mastodon.social</em>. Currently only
+                    Mastodon is supported, more to come!</div>
+                </form>
               </div>
-              <div class="col-md-6">
-                <span class="placeholder rounded d-block"
-                  style="width:200px;height:200px;"></span>
-              </div>
-            </div>
-            <div id="preview-images"
-              class="row g-3 mb-3">
-              <div class="col-md-6">
-                <img id="original-image"
-                  class="avatar img-fluid rounded"
-                  alt="">
-              </div>
-              <div class="col-md-6">
-                <div class="checkerboard rounded">
-                  <img id="result-image"
-                    class="avatar img-fluid"
-                    alt="">
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="image-input"
+                    class="form-label">Or upload manually</label>
+                  <input type="file"
+                    class="form-control"
+                    id="image-input"
+                    accept="image/*">
                 </div>
               </div>
             </div>
-            <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
-              <button id="remove-bg-btn"
-                class="btn btn-primary d-none">Remove background</button>
+
+            <div id="preview-area"
+              class="d-none mt-3">
+              <p class="lead fw-bold">
+                Step 2: Remove background
+              </p>
+              <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+                <button id="remove-bg-btn"
+                  class="btn btn-primary d-none">Remove background</button>
+              </div>
+              <div id="progress-area"
+                class="d-none mt-3">
+                <div class="progress mb-1"
+                  style="height: 6px;">
+                  <div id="progress-bar"
+                    class="progress-bar"
+                    role="progressbar"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    style="width: 0%"></div>
+                </div>
+                <small id="progress-text"
+                  class="text-muted"></small>
+              </div>
+            </div>
+            <script>
+              if (localStorage.getItem("avatar_original")) {
+                document.getElementById("preview-area").classList.remove("d-none");
+                document.getElementById("col-preview").classList.remove("d-none");
+                document.getElementById("col-controls").classList.replace("col-12", "col-md-8");
+                document.getElementById("preview-skeleton").classList.remove("d-none");
+                document.getElementById("preview-images").classList.add("d-none");
+                document.getElementById("examples-image").classList.add("d-none");
+              }
+            </script>
+
+            <div id="select-background"
+              class="d-none mt-3">
+              <p class="lead fw-bold">
+                Step 3: Add new background
+              </p>
+              <p>Play with colors and blend modes, or choose a custom background.</p>
+              <p class="fw-bold mb-2">Text color</p>
+              <div class="mb-3">
+                <input type="radio"
+                  class="btn-check"
+                  name="text-variant"
+                  id="text-light"
+                  value="light"
+                  autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary"
+                  for="text-light">Dark</label>
+                <input type="radio"
+                  class="btn-check"
+                  name="text-variant"
+                  id="text-dark"
+                  value="dark"
+                  autocomplete="off">
+                <label class="btn btn-outline-primary"
+                  for="text-dark">Light</label>
+              </div>
+              <div id="bg-scale-container"
+                class="mb-3 d-none">
+                <label for="bg-scale-slider"
+                  class="form-label">Zoom: <span id="bg-scale-value">3</span>&times;</label>
+                <input type="range"
+                  class="form-range"
+                  id="bg-scale-slider"
+                  min="1"
+                  max="5"
+                  step="0.1"
+                  value="3">
+              </div>
+              <p class="fw-bold mb-2">Background</p>
+              <div class="mb-3">
+                <input type="radio"
+                  class="btn-check"
+                  name="background"
+                  id="bg-color"
+                  value="color"
+                  autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary"
+                  for="bg-color">Color</label>
+                <div id="bg-color-options"
+                  class="mt-2">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <label for="bg-color-picker"
+                      class="overlay-color-label">Pick a color</label>
+                    <input type="color"
+                      id="bg-color-picker"
+                      value="#ffffff"
+                      list="bg-color-presets">
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <label for="bg-blend-mode"
+                      class="overlay-color-label">Blend mode</label>
+                    <select id="bg-blend-mode"
+                      class="form-select form-select-sm">
+                      <option value="multiply"
+                        selected>Multiply</option>
+                      <option value="screen">Screen</option>
+                      <option value="overlay">Overlay</option>
+                      <option value="soft-light">Soft Light</option>
+                      <option value="hard-light">Hard Light</option>
+                      <option value="luminosity">Luminosity</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <datalist id="bg-color-presets">
+                <option>#ed5565</option>
+                <option>#da4453</option>
+                <option>#fc6e51</option>
+                <option>#e9573f</option>
+                <option>#ffce54</option>
+                <option>#fcbb42</option>
+                <option>#a0d468</option>
+                <option>#8cc152</option>
+                <option>#48cfad</option>
+                <option>#37bc9b</option>
+                <option>#4fc1e9</option>
+                <option>#3bafda</option>
+                <option>#5d9cec</option>
+                <option>#4a89dc</option>
+                <option>#ac92ec</option>
+                <option>#967adc</option>
+                <option>#ec87c0</option>
+                <option>#d770ad</option>
+                <option>#f5f7fa</option>
+                <option>#e6e9ed</option>
+                <option>#ccd1d9</option>
+                <option>#aab2bd</option>
+                <option>#656d78</option>
+                <option>#434a54</option>
+              </datalist>
+              <p class="fw-bold mb-2">Pride</p>
+              <div class="row g-3"
+                id="select-pride-flag-options">
+                <div class="col-6 col-md-4">
+                  <input type="radio"
+                    class="btn-check"
+                    name="background"
+                    id="pride-flag-gilbert-baker"
+                    value="pride--gilbert-baker"
+                    autocomplete="off">
+                  <label class="btn btn-outline-primary w-100 p-2"
+                    for="pride-flag-gilbert-baker">
+                    <img src="images/overlays/pride-flags/fediverse-international-gilbert-baker-pride-flag.png"
+                      class="rounded mb-1"
+                      alt="">
+                    <div class="small">Gilbert Baker Pride Flag</div>
+                  </label>
+                </div>
+                <div class="col-6 col-md-4">
+                  <input type="radio"
+                    class="btn-check"
+                    name="background"
+                    id="pride-flag-traditional-gay"
+                    value="pride--traditional-gay"
+                    autocomplete="off">
+                  <label class="btn btn-outline-primary w-100 p-2"
+                    for="pride-flag-traditional-gay">
+                    <img src="images/overlays/pride-flags/fediverse-international-traditional-gay-pride-flag.png"
+                      class="rounded mb-1"
+                      alt="">
+                    <div class="small">Traditional Pride Flag</div>
+                  </label>
+                </div>
+                <div class="col-6 col-md-4">
+                  <input type="radio"
+                    class="btn-check"
+                    name="background"
+                    id="pride-flag-philadelphia"
+                    value="pride--philadelphia"
+                    autocomplete="off">
+                  <label class="btn btn-outline-primary w-100 p-2"
+                    for="pride-flag-philadelphia">
+                    <img src="images/overlays/pride-flags/fediverse-international-traditional-philly-pride-flag.png"
+                      class="rounded mb-1"
+                      alt="">
+                    <div class="small">Philadelphia Pride Flag</div>
+                  </label>
+                </div>
+                <div class="col-6 col-md-4">
+                  <input type="radio"
+                    class="btn-check"
+                    name="background"
+                    id="pride-flag-progress-variant"
+                    value="pride--progress-variant"
+                    autocomplete="off">
+                  <label class="btn btn-outline-primary w-100 p-2"
+                    for="pride-flag-progress-variant">
+                    <img src="images/overlays/pride-flags/fediverse-international-progress-variant-pride-flag.png"
+                      class="rounded mb-1"
+                      alt="">
+                    <div class="small">Progress Pride Flag</div>
+                  </label>
+                </div>
+                <div class="col-6 col-md-4">
+                  <input type="radio"
+                    class="btn-check"
+                    name="background"
+                    id="pride-flag-intersex-inclusive"
+                    value="pride--intersex-inclusive"
+                    autocomplete="off">
+                  <label class="btn btn-outline-primary w-100 p-2"
+                    for="pride-flag-intersex-inclusive">
+                    <img src="images/overlays/pride-flags/fediverse-international-intersex-inclusive-pride-flag.png"
+                      class="rounded mb-1"
+                      alt="">
+                    <div class="small">Intersex-Inclusive Progress Pride Flag</div>
+                  </label>
+                </div>
+                <div class="col-6 col-md-4">
+                  <input type="radio"
+                    class="btn-check"
+                    name="background"
+                    id="pride-flag-queer"
+                    value="pride--queer"
+                    autocomplete="off">
+                  <label class="btn btn-outline-primary w-100 p-2"
+                    for="pride-flag-queer">
+                    <img src="images/overlays/pride-flags/fediverse-international-queer-pride-flag.png"
+                      class="rounded mb-1"
+                      alt="">
+                    <div class="small">Queer Pride Flag</div>
+                  </label>
+                </div>
+              </div>
+              <p class="text-muted small mt-2">Source: <a href="https://www.hrc.org/resources/lgbtq-pride-flags"
+                  target="_blank">hrc.org</a></p>
+            </div>
+
+            <div id="download-area"
+              class="d-none mt-3">
+              <p class="lead fw-bold">
+                Step 4: Download your new profile image
+              </p>
+              <a id="download-btn"
+                class="btn btn-primary"
+                download="avatar.png">Download</a>
+              <button id="upload-avatar-btn"
+                class="btn btn-outline-primary d-none">Upload avatar</button>
               <button id="remove-image-btn"
                 class="btn btn-outline-secondary">Remove image</button>
             </div>
-            <div id="progress-area"
-              class="d-none mt-3">
-              <div class="progress mb-1"
-                style="height: 6px;">
-                <div id="progress-bar"
-                  class="progress-bar"
-                  role="progressbar"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                  style="width: 0%"></div>
-              </div>
-              <small id="progress-text"
-                class="text-muted"></small>
-            </div>
-          </div>
-          <script>
-            if (localStorage.getItem("avatar_original")) {
-              document.getElementById("preview-area").classList.remove("d-none");
-              document.getElementById("preview-skeleton").classList.remove("d-none");
-              document.getElementById("preview-images").classList.add("d-none");
-              document.getElementById("examples-image").classList.add("d-none");
-            }
-          </script>
-
-          <div id="select-background"
-            class="d-none mt-3">
-            <p class="lead fw-bold">
-              Step 3: Pick a new background
-            </p>
-            <div class="row g-3"
-              id="select-background-options">
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="background"
-                  id="bg-fedi-international-dark"
-                  value="fedi-international-dark"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="bg-fedi-international-dark">
-                  <img src="images/backgrounds/fediverse-international-dark.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Fediverse International Dark</div>
-                </label>
-              </div>
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="background"
-                  id="bg-fedi-international-light"
-                  value="fedi-international-light"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="bg-fedi-international-light">
-                  <img src="images/backgrounds/fediverse-international-light.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Fediverse International Light</div>
-                </label>
-              </div>
-            </div>
-            <div id="bg-scale-container"
-              class="mt-3 d-none">
-              <label for="bg-scale-slider"
-                class="form-label">Background zoom: <span id="bg-scale-value">3</span>&times;</label>
-              <input type="range"
-                class="form-range"
-                id="bg-scale-slider"
-                min="1"
-                max="5"
-                step="0.1"
-                value="3">
-            </div>
           </div>
 
-          <div id="select-overlay"
-            class="d-none mt-3">
-            <p class="lead fw-bold">
-              Step 4 <span class="fw-normal text-muted">(Optional)</span>: Pick an overlay
-            </p>
-            <div class="mb-3">
-              <input type="radio"
-                class="btn-check"
-                name="overlay"
-                id="pride-flag-none"
-                value=""
-                autocomplete="off"
-                checked>
-              <label class="btn btn-outline-primary"
-                for="pride-flag-none">No overlay</label>
-            </div>
-            <p class="fw-bold mb-2">Pride</p>
-            <div class="row g-3"
-              id="select-pride-flag-options">
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="overlay"
-                  id="pride-flag-gilbert-baker"
-                  value="pride--gilbert-baker"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="pride-flag-gilbert-baker">
-                  <img src="images/overlays/pride-flags/fediverse-international-gilbert-baker-pride-flag.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Gilbert Baker Pride Flag</div>
-                </label>
-              </div>
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="overlay"
-                  id="pride-flag-traditional-gay"
-                  value="pride--traditional-gay"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="pride-flag-traditional-gay">
-                  <img src="images/overlays/pride-flags/fediverse-international-traditional-gay-pride-flag.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Traditional Pride Flag</div>
-                </label>
-              </div>
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="overlay"
-                  id="pride-flag-philadelphia"
-                  value="pride--philadelphia"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="pride-flag-philadelphia">
-                  <img src="images/overlays/pride-flags/fediverse-international-traditional-philly-pride-flag.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Philadelphia Pride Flag</div>
-                </label>
-              </div>
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="overlay"
-                  id="pride-flag-progress-variant"
-                  value="pride--progress-variant"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="pride-flag-progress-variant">
-                  <img src="images/overlays/pride-flags/fediverse-international-progress-variant-pride-flag.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Progress Pride Flag</div>
-                </label>
-              </div>
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="overlay"
-                  id="pride-flag-intersex-inclusive"
-                  value="pride--intersex-inclusive"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="pride-flag-intersex-inclusive">
-                  <img src="images/overlays/pride-flags/fediverse-international-intersex-inclusive-pride-flag.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Intersex-Inclusive Progress Pride Flag</div>
-                </label>
-              </div>
-              <div class="col-6 col-md-4">
-                <input type="radio"
-                  class="btn-check"
-                  name="overlay"
-                  id="pride-flag-queer"
-                  value="pride--queer"
-                  autocomplete="off">
-                <label class="btn btn-outline-primary w-100 p-2"
-                  for="pride-flag-queer">
-                  <img src="images/overlays/pride-flags/fediverse-international-queer-pride-flag.png"
-                    class="rounded mb-1"
-                    alt="">
-                  <div class="small">Queer Pride Flag</div>
-                </label>
-              </div>
-            </div>
-            <p class="text-muted small mt-2">Source: <a
-                href="https://www.hrc.org/resources/lgbtq-pride-flags">hrc.org</a></p>
-          </div>
-
-          <div id="download-area"
-            class="d-none mt-3">
-            <p class="lead fw-bold">
-              Step 5: Download your new profile image
-            </p>
-            <a id="download-btn"
-              class="btn btn-primary"
-              download="avatar.png">Download</a>
-            <button id="upload-avatar-btn"
-              class="btn btn-outline-primary d-none">Upload avatar</button>
-          </div>
         </div>
       </div>
     </section>

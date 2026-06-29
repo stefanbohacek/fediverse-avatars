@@ -1,20 +1,25 @@
 import { applySelectedBackground, preloadBackgrounds } from "./backgrounds.js";
+import { hasTransparentBackground } from "./detectTransparentBackground.js";
 import { signIn, fetchAvatar, uploadAvatar } from "./fediverse.js";
+
 import {
   get as getLocalStorage,
   set as setLocalStorage,
   saveBlob as saveToLocalStorage,
   clear as clearLocalStorage,
 } from "./storage.js";
+
 import { toWebP as blobToWebP } from "./blobConvert.js";
 import { removeBackground } from "../../libs/imgly/background-removal/dist/index.mjs";
+
 import {
-  getOverlayKey,
-  resetOverlay,
-  showOverlay,
-  hideOverlay,
-  restoreOverlay,
-  initOverlay,
+  getTextVariant,
+  getBackgroundSpec,
+  resetBackground,
+  showBackground,
+  hideBackground,
+  restoreBackground,
+  initBackground,
 } from "./overlay.js";
 
 const progressMessages = {
@@ -38,61 +43,92 @@ export default () => {
   const downloadBtn = document.getElementById("download-btn");
   const downloadArea = document.getElementById("download-area");
   const uploadAvatarBtn = document.getElementById("upload-avatar-btn");
-  const selectBackground = document.getElementById("select-background");
-  const selectBackgroundOptions = document.getElementById(
-    "select-background-options",
-  );
   const removeImageBtn = document.getElementById("remove-image-btn");
   const bgScaleSlider = document.getElementById("bg-scale-slider");
   const bgScaleValue = document.getElementById("bg-scale-value");
   const bgScaleContainer = document.getElementById("bg-scale-container");
   const previewSkeleton = document.getElementById("preview-skeleton");
   const previewImages = document.getElementById("preview-images");
+  const colPreview = document.getElementById("col-preview");
+  const resultImageWrapper = document.getElementById("result-image-wrapper");
+  const colControls = document.getElementById("col-controls");
   const examplesImage = document.getElementById("examples-image");
+  const selectBackgroundSection = document.getElementById("select-background");
+
+  const scrollTo = (element) => {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   let currentFile = null;
   let foregroundBlob = null;
   let foregroundUrl = null;
   let imageSource = null;
+  let hasTransparentBg = false;
 
-  const applyBackground = (backgroundKey) => {
+  const applyBackground = () => {
     applySelectedBackground(
       foregroundBlob,
-      backgroundKey,
-      getOverlayKey(),
+      getTextVariant(),
+      getBackgroundSpec(),
       resultImage,
       downloadBtn,
       downloadArea,
       parseFloat(bgScaleSlider.value),
+      hasTransparentBg,
     );
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
       currentFile = file;
       foregroundBlob = null;
+      hasTransparentBg = false;
       originalImage.src = URL.createObjectURL(file);
       resultImage.src = "";
-      removeBgBtn.classList.remove("d-none");
+      resultImageWrapper.classList.add("d-none");
       downloadArea.classList.add("d-none");
       progressArea.classList.add("d-none");
-      selectBackground.classList.add("d-none");
-      hideOverlay();
+      hideBackground();
       examplesImage.classList.add("d-none");
       previewArea.classList.remove("d-none");
+      colPreview.classList.remove("d-none");
+      colControls.classList.replace("col-12", "col-md-8");
       imageSource = "file";
       setLocalStorage("image_source", "file");
       clearLocalStorage("avatar_no_bg");
+      clearLocalStorage("has_transparent_bg");
       blobToWebP(file).then((webpBlob) =>
         saveToLocalStorage("avatar_original", webpBlob),
       );
+
+      hasTransparentBg = await hasTransparentBackground(file);
+
+      if (hasTransparentBg) {
+        foregroundBlob = file;
+        resultImage.src = URL.createObjectURL(file);
+        resultImageWrapper.classList.remove("d-none");
+        showBackground();
+        bgScaleContainer.classList.remove("d-none");
+        setLocalStorage("has_transparent_bg", "true");
+        blobToWebP(file).then((webpBlob) =>
+          saveToLocalStorage("avatar_no_bg", webpBlob),
+        );
+        if (getBackgroundSpec()) {
+          applyBackground();
+        }
+        scrollTo(selectBackgroundSection);
+      } else {
+        removeBgBtn.classList.remove("d-none");
+        scrollTo(previewArea);
+      }
     }
   };
 
   const handleRemoveImage = () => {
     currentFile = null;
     foregroundBlob = null;
+    hasTransparentBg = false;
 
     if (foregroundUrl) {
       URL.revokeObjectURL(foregroundUrl);
@@ -102,19 +138,18 @@ export default () => {
     imageInput.value = "";
     originalImage.src = "";
     resultImage.src = "";
-    selectBackgroundOptions.querySelectorAll("input").forEach((radio) => {
-      radio.checked = false;
-    });
+    resultImageWrapper.classList.add("d-none");
 
-    resetOverlay();
+    resetBackground();
 
     removeImageBtn.textContent = "Remove image";
     bgScaleContainer.classList.add("d-none");
+    bgScaleSlider.value = 3;
+    bgScaleValue.textContent = 3;
     previewArea.classList.add("d-none");
-    selectBackground.classList.add("d-none");
-
-    hideOverlay();
-
+    colPreview.classList.add("d-none");
+    colControls.classList.replace("col-md-8", "col-12");
+    hideBackground();
     examplesImage.classList.remove("d-none");
     downloadArea.classList.add("d-none");
 
@@ -162,23 +197,21 @@ export default () => {
 
         foregroundUrl = URL.createObjectURL(foregroundBlob);
         resultImage.src = foregroundUrl;
+        resultImageWrapper.classList.remove("d-none");
         removeBgBtn.classList.add("d-none");
         progressArea.classList.add("d-none");
-        selectBackground.classList.remove("d-none");
-
-        showOverlay();
+        showBackground();
+        bgScaleContainer.classList.remove("d-none");
+        scrollTo(selectBackgroundSection);
 
         blobToWebP(foregroundBlob).then((webpBlob) =>
           saveToLocalStorage("avatar_no_bg", webpBlob),
         );
 
-        const checkedRadio =
-          selectBackgroundOptions.querySelector("input:checked");
-
-        if (checkedRadio) {
+        if (getBackgroundSpec()) {
           URL.revokeObjectURL(foregroundUrl);
           foregroundUrl = null;
-          applyBackground(checkedRadio.value);
+          applyBackground();
         }
       } catch (err) {
         progressText.textContent = "Error occurred: " + err.message;
@@ -190,41 +223,8 @@ export default () => {
     }
   };
 
-  const handleBgChange = (event) => {
-    if (foregroundUrl) {
-      URL.revokeObjectURL(foregroundUrl);
-      foregroundUrl = null;
-    }
-
-    bgScaleContainer.classList.remove("d-none");
-
-    setLocalStorage("avatar_background", event.target.value);
-
-    if (imageSource === "api") {
-      uploadAvatarBtn.textContent = "Upload avatar";
-      uploadAvatarBtn.disabled = false;
-      uploadAvatarBtn.classList.remove("d-none");
-    }
-
-    applyBackground(event.target.value);
-  };
-
-  const handleScaleChange = () => {
-    setLocalStorage("avatar_bg_scale", bgScaleSlider.value);
-    const checkedRadio = selectBackgroundOptions.querySelector("input:checked");
-
-    if (checkedRadio && foregroundBlob) {
-      if (imageSource === "api") {
-        uploadAvatarBtn.textContent = "Upload avatar";
-        uploadAvatarBtn.disabled = false;
-      }
-      applyBackground(checkedRadio.value);
-    }
-  };
-
   const restoreState = () => {
     const savedScale = getLocalStorage("avatar_bg_scale");
-
     if (savedScale) {
       bgScaleSlider.value = savedScale;
       bgScaleValue.textContent = savedScale;
@@ -239,6 +239,8 @@ export default () => {
       }
     }
 
+    hasTransparentBg = getLocalStorage("has_transparent_bg") === "true";
+
     const savedOriginal = getLocalStorage("avatar_original");
     const savedNoBg = getLocalStorage("avatar_no_bg");
 
@@ -246,6 +248,8 @@ export default () => {
       originalImage.src = savedOriginal;
       examplesImage.classList.add("d-none");
       previewArea.classList.remove("d-none");
+      colPreview.classList.remove("d-none");
+      colControls.classList.replace("col-12", "col-md-8");
       previewSkeleton.classList.remove("d-none");
       previewImages.classList.add("d-none");
 
@@ -260,12 +264,14 @@ export default () => {
           });
       }
     }
+
     if (savedNoBg) {
       examplesImage.classList.add("d-none");
       previewArea.classList.remove("d-none");
+      colPreview.classList.remove("d-none");
       resultImage.src = savedNoBg;
 
-      restoreOverlay();
+      restoreBackground();
 
       fetch(savedNoBg)
         .then((r) => r.blob())
@@ -273,30 +279,16 @@ export default () => {
           foregroundBlob = blob;
           previewSkeleton.classList.add("d-none");
           previewImages.classList.remove("d-none");
+          resultImageWrapper.classList.remove("d-none");
           removeBgBtn.classList.add("d-none");
-          selectBackground.classList.remove("d-none");
+          showBackground();
+          bgScaleContainer.classList.remove("d-none");
 
-          showOverlay();
-
-          const savedBackground = getLocalStorage("avatar_background");
-
-          if (savedBackground) {
-            const radio = selectBackgroundOptions.querySelector(
-              `input[value="${savedBackground}"]`,
-            );
-
-            if (radio) {
-              radio.checked = true;
-            }
-
-            bgScaleContainer.classList.remove("d-none");
-
-            if (imageSource === "api") {
-              uploadAvatarBtn.classList.remove("d-none");
-            }
-
-            applyBackground(savedBackground);
+          if (imageSource === "api") {
+            uploadAvatarBtn.classList.remove("d-none");
           }
+
+          applyBackground();
         });
     }
   };
@@ -348,6 +340,8 @@ export default () => {
           originalImage.src = URL.createObjectURL(blob);
           examplesImage.classList.add("d-none");
           previewArea.classList.remove("d-none");
+          colPreview.classList.remove("d-none");
+          colControls.classList.replace("col-12", "col-md-8");
           previewSkeleton.classList.add("d-none");
           previewImages.classList.remove("d-none");
           imageSource = "api";
@@ -374,24 +368,33 @@ export default () => {
   imageInput.addEventListener("change", handleFileChange);
   removeImageBtn.addEventListener("click", handleRemoveImage);
   removeBgBtn.addEventListener("click", handleRemoveBg);
-  selectBackgroundOptions.addEventListener("change", handleBgChange);
 
-  initOverlay(() => {
-    const checkedBgRadio =
-      selectBackgroundOptions.querySelector("input:checked");
-
-    if (checkedBgRadio && foregroundBlob) {
+  initBackground(() => {
+    if (foregroundBlob) {
+      bgScaleContainer.classList.remove("d-none");
       if (imageSource === "api") {
         uploadAvatarBtn.textContent = "Upload avatar";
         uploadAvatarBtn.disabled = false;
       }
-      applyBackground(checkedBgRadio.value);
+      applyBackground();
     }
   });
+
   bgScaleSlider.addEventListener("input", () => {
     bgScaleValue.textContent = bgScaleSlider.value;
   });
-  bgScaleSlider.addEventListener("change", handleScaleChange);
+
+  bgScaleSlider.addEventListener("change", () => {
+    setLocalStorage("avatar_bg_scale", bgScaleSlider.value);
+    if (foregroundBlob) {
+      if (imageSource === "api") {
+        uploadAvatarBtn.textContent = "Upload avatar";
+        uploadAvatarBtn.disabled = false;
+      }
+      applyBackground();
+    }
+  });
+
   uploadAvatarBtn.addEventListener("click", handleUploadAvatar);
 
   restoreState();

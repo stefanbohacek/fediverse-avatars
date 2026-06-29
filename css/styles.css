@@ -80,27 +80,9 @@ a:focus {
   text-decoration-color: var(--hh-headline);
 }
 
-#main {
-  color: var(--hh-body);
-}
-
-#intro{
+#intro {
   max-width: 900px;
   margin: 0 auto;
-}
-
-.card {
-  --bs-card-bg: var(--hh-card-bg);
-  --bs-card-border-color: color-mix(
-    in srgb,
-    var(--hh-surface) 50%,
-    transparent
-  );
-  --bs-card-color: var(--hh-body);
-}
-
-#main .container.p-1 {
-  margin-top: 2rem !important;
 }
 
 .btn-outline-primary {
@@ -144,15 +126,6 @@ a:focus {
   color: var(--hh-card-bg);
 }
 
-#preview-area .avatar,
-.checkerboard {
-  max-width: 200px;
-}
-
-.badge-new {
-  display: inline-block;
-}
-
 .form-text {
   color: var(--hh-body);
 }
@@ -163,12 +136,44 @@ a:focus {
   }
 }
 
-#select-background-options .btn,
+#bg-color-options {
+  max-width: 20rem;
+}
+
+.overlay-color-label {
+  min-width: 6rem;
+}
+
+#bg-color-picker,
+#bg-blend-mode {
+  flex: 1;
+}
+
+@media (max-width: 767px) {
+  .avatar {
+    max-height: 300px;
+    width: 100%;
+    object-fit: contain;
+  }
+}
+
+#col-preview {
+  background-color: var(--hh-bg);
+}
+
+@media (max-width: 767px) {
+  #col-preview {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding-bottom: 1rem;
+  }
+}
+
 #select-pride-flag-options .btn {
   height: 100%;
 }
 
-#select-background-options img,
 #select-pride-flag-options img {
   width: 100%;
   max-width: 200px;
@@ -176,8 +181,45 @@ a:focus {
   object-fit: cover;
 }
 
+#examples-image {
+  overflow: hidden;
+}
+
+.examples-collage {
+  padding: 1rem 0;
+}
+
+.examples-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.examples-img + .examples-img {
+  margin-left: -30px;
+}
+
+.examples-img:nth-child(1) {
+  transform: rotate(-6deg);
+}
+.examples-img:nth-child(2) {
+  transform: rotate(4deg);
+}
+.examples-img:nth-child(3) {
+  transform: rotate(-3deg);
+}
+.examples-img:nth-child(4) {
+  transform: rotate(7deg);
+}
+.examples-img:nth-child(5) {
+  transform: rotate(-5deg);
+}
+.examples-img:nth-child(6) {
+  transform: rotate(2deg);
+}
+
 .checkerboard {
-  min-height: 200px;
   background-color: #fff;
   background-image:
     linear-gradient(45deg, #d0d0d0 25%, transparent 25%),

@@ -202,6 +202,11 @@ export default () => {
         progressArea.classList.add("d-none");
         showBackground();
         bgScaleContainer.classList.remove("d-none");
+
+        if (imageSource === "api") {
+          uploadAvatarBtn.classList.remove("d-none");
+        }
+
         scrollTo(selectBackgroundSection);
 
         blobToWebP(foregroundBlob).then((webpBlob) =>
